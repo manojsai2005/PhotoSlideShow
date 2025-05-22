@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop File Upload</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <style>
+        #drop-area {
+            border: 5px dashed #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .drop-container {
+            width: 700px;
+            height: 350px;
+        }
+
+        #drop-area.highlight {
+            border-color: #4CAF50;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        #file-input-label {
+            background-color: black;
+            color: red;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #file-input-label:hover {
+            transform: scale(1.2);
+            background-color: #fff;
+            color: black;
+            border: 2px solid black;
+        }
+
+        #upload-button {
+            background-color: white;
+            color: rgb(0, 0, 0);
+            height: 50px;
+            width: 100px;
+            border: none;
+            border-radius: 5px;
+            margin-left: 43%;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #upload-button:hover {
+            transform: scale(1.2);
+        }
+
+        #file-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #file-list li {
+            margin-bottom: 5px;
+        }
+
+
+        #image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            overflow-x: auto;
+            gap: 10px;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+
+        #image-count {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .image-preview-container {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            overflow-x: auto;
+        }
+
+        .image-item {
+            max-width: 100px;
+            max-height: 100px;
+            flex: 0 0 auto;
+            margin-right: 10px;
+        }
+
+        .image-item img {
+            width: 100px;
+            height: 100px;
+            padding: 10%
+        }
+    </style>
+
+
+</head>
+
+<body class="uploadbg">
+    <form id="upload-form">
+        <div class="drop-container">
+            <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                <p style="font-weight: 700; font-size: 20px;">Drag & Drop files here (<span id="image-count">0</span>
+                    images
+                    uploaded)</p>
+                <p>or</p>
+                <br>
+                <br>
+                <label for="file-input" id="file-input-label">Browse files</label>
+                <input type="file" accept="image/*" id="file-input" name="file-input" multiple
+                    onchange="fileInputHandler(event);">
+            </div>
+    </form>
+
+    <div class="image-preview-container" id="image-preview"></div>
+    <button id="upload-button" type="button" onclick="submit_form(event)">Upload</button>
+    <br>
+    <button type="submit" id="upload-button"><a href="home.html"
+            style="text-decoration: none;color: black;">HOME</a></button>
+
+</body>
+<script>
+
+    let uploadedImageCount = 0;
+    function updateImageCount() {
+        document.getElementById('image-count').textContent = uploadedImageCount;
+    }
+    let image_file = ""
+    function submit_form(e) {
+        e.preventDefault()
+        console.log(image_file);
+        let formData = new FormData();
+
+        if (image_file.length > 0) {
+            for (let i = 0; i < image_file.length; i++) {
+                let file_ = image_file[i];
+                formData.append("file-input", file_, file_.name);
+            }
+            console.log(" I am here");
+
+            fetch("/upload", {
+                method: "POST",
+                body: formData,
+            })
+                .then(res => res.text())
+                .then(res => {
+
+                    document.body.innerHTML = (res);
+                    document.getElementById('image-preview').innerHTML = '';
+                    uploadedImageCount = 0;
+                    updateImageCount();
+                    const flashMessages = document.querySelectorAll('.flash-message');
+                    flashMessages.forEach(message => {
+                        message.style.display = 'block';
+                    });
+
+                });
+        }
+    }
+
+    function dragOverHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').classList.add('highlight');
+        const x1 = document.getElementById('drop-area');
+        x1.className = "highlight";
+    }
+
+    function dragEnterHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').classList.add('highlight');
+    }
+
+    function dragLeaveHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').classList.remove('highlight');
+    }
+
+    function dropHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').classList.remove('highlight');
+        const files = event.dataTransfer.files;
+        image_file = files
+        console.log(image_file)
+        handleFiles(files);
+    }
+
+    function fileInputHandler(event) {
+        const files = event.target.files;
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        image_file = files;
+        const fileList = document.getElementById('image-preview');
+        for (const file of files) {
+            const listItem = document.createElement('div');
+            listItem.textContent = file.name;
+            fileList.appendChild(listItem);
+            if (file.type.startsWith('image/')) {
+                uploadedImageCount++;
+                updateImageCount();
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageItem = document.createElement('div');
+                    imageItem.classList.add('image-item');
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    imageItem.appendChild(img);
+                    listItem.appendChild(imageItem);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+    function goToHome() {
+        window.location.href = '/redirect-home';
+    }
+
+
+</script>
+
+</html>

@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: Arial, sans-serif;
+}
+
+.Successbg
+{
+    padding-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(images/1.jpg);
+    background-attachment: fixed; 
+    background-size: cover;
+}
+.welcomebg {
+    padding-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(images/7.jpg);
+    background-attachment: fixed; 
+    background-size: cover;
+}
+
+.homebg {
+    padding-top: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(images/6.jpg);
+    background-attachment: fixed; 
+    background-size: cover;
+}
+
+.uploadbg
+{
+    padding-top: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(images/0.jpeg);
+    background-attachment: fixed; 
+    background-size: cover;
+
+}
+
+.adminbody {
+
+    background-image: url(images/3.webp);
+    background-attachment: fixed; 
+    background-size: cover;
+}
+
+.videobody{
+    background-image: url(images/video.jpg);
+     background-attachment: fixed; 
+    background-size: 100%;
+} 
+
+.signupbody
+{
+    padding-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(images/5.jpg);
+    background-attachment: fixed; 
+    background-size: cover;
+}
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0px 10px 10px rgba(72, 71, 71, 0.1);
+    width: 420px;
+    height: 250px;
+}
+
+.welcome-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.button {
+    display: block;
+    width: auto;
+    padding: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
+    background-color: #040113;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    margin-bottom: 10px;
+    transition: 0.3s ease;
+}
+
+.button:hover {
+    background-color: #fff;
+    transform: scale(1.2);
+    color: black;
+    border: 2px solid black;
+}
+
+.login-container,
+.signup-container {
+    width: 550px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1); 
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.login-container h1,
+.signup-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    text-align: left; 
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: calc(100% - 22px); 
+    color: #888; 
+}
+
+input[type="password"][name="confirm-password"] {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: calc(100% - 22px); 
+    color: #888; 
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #2251d4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: black;
+    color: white;
+}
+
+p {
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+p a {
+    color: #344ea1;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+p a:hover {
+    color: #0056b3;
+}
+
+.home-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.action-container {
+    text-align: center; 
+    position: relative; 
+    margin: 10px;
+}
+
+.action-container button {
+    padding: 20px;
+    font-size: 1.2rem;
+    background-color: black;
+    color:#fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.action-container button:hover {
+    background-color:#fff;
+    color: black; 
+    transform: scale(1.2);
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05); 
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    height: 300px;
+}

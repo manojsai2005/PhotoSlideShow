@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Images</title>
+    <style>
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 35px;
+            justify-content: space-between;
+            padding: 5%;
+            margin: 2%
+        }
+
+        .image-container>div {
+            flex-basis: calc(25% - 10px);
+            margin-bottom: 20px;
+        }
+
+        .image-container>div img {
+            width: 300px;
+            height: 300px;
+        }
+
+        #selected-images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            margin-top: 20px;
+            max-width: 100%;
+        }
+
+        .selected-image-wrapper {
+            flex-basis: 25%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            padding: 0 5px;
+        }
+
+        .selected-image-wrapper img {
+            width: 100%;
+            height: auto;
+        }
+
+        .selected-image-wrapper input {
+            margin-top: 5px;
+            width: 60px;
+        }
+
+        .button-85 {
+            margin-top: 3%;
+            margin-bottom: 2%;
+            margin-left: 2.5%;
+            padding: 0.6em 2em;
+            border: none;
+            outline: none;
+            color: rgb(255, 255, 255);
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-85:before {
+            content: "";
+            background: linear-gradient(45deg,
+                    #ff0000,
+                    #ff7300,
+                    #fffb00,
+                    #48ff00,
+                    #00ffd5,
+                    #002bff,
+                    #7a00ff,
+                    #ff00c8,
+                    #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            animation: glowing-button-85 20s linear infinite;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing-button-85 {
+            0% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 400% 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .button-85:after {
+            z-index: -1;
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #222;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        .btn {
+            --color: #0079a9;
+            --color2: rgb(10, 25, 30);
+            padding: 0.8em 1.75em;
+            background-color: #111;
+            border-radius: 6px;
+            border: .3px solid var(--color);
+            transition: .5s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 1;
+            font-weight: 300;
+            font-size: 17px;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            text-transform: uppercase;
+            color: var(--color);
+        }
+
+        .btn::after,
+        .btn::before {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 100%;
+            transform: skew(90deg) translate(-50%, -50%);
+            position: absolute;
+            inset: 50%;
+            left: 25%;
+            z-index: -1;
+            transition: .4s ease-out;
+            background-color: var(--color);
+        }
+
+        .btn::before {
+            top: -50%;
+            left: -25%;
+            transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
+        }
+
+        .btn:hover::after {
+            transform: skew(45deg) translate(-50%, -50%);
+        }
+
+        .btn:hover {
+            color: var(--color2);
+        }
+
+        .btn:active {
+            filter: brightness(.7);
+            transform: scale(.98);
+        }
+
+        .image-wrapper {
+            position: relative;
+        }
+
+        .selectable-image {
+            transition: transform 0.3s;
+        }
+
+        .selectable-image:hover {
+            transform: scale(1.1);
+        }
+
+        .tick {
+            position: absolute;
+            left: -40px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: black;
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .image-wrapper.selected .tick {
+            visibility: visible;
+        }
+
+        .image-wrapper {
+            position: relative;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="videobody">
+    <h1 style="padding:5%;padding-left:42%;text-decoration: underline;">Images:</h1>
+    <div id="image-container" class="image-container" class="btn">
+    </div>
+    <div style="padding-left: 36%;padding-top: 5%;padding-bottom: 5%;">
+        <button id="show-selected" class="btn">Show Selected Images</button>
+    </div>
+    <div id="selected-images-container" class="image-container"></div>
+
+    <br><br>
+    <br><br>
+    <div style="padding-left: 30%;">
+        <div class="button-85" style="width: 40%;">
+            <label for="backgroundMusic">Background Music :</label>
+            <select id="backgroundMusic" class="form-select mb-3"></select>
+            <br><br><br><br>
+            <audio id="audioPlayer" controls></audio>
+        </div>
+        <div class="button-85" style="width: 40%;">
+            <label for="transitionEffect">Transition Effect:</label>
+            <select id="transitionEffect">
+                <option value="Fade In">Fade In</option>
+                <option value="Fade">Fade In & Out</option>
+                <option value="Fade Out">Fade Out</option>
+                <option value="Slide In">Slide In</option>
+                <option value="Slide Out">Slide Out</option>
+            </select>
+        </div>
+        <div class="button-85" style="width: 40%;">
+            <label for="transitionDuration">Transition Duration:</label>
+            <input style="width: 20%;" type="number" id="transitionDuration" name="transitionDuration" min="1" step="1"
+                value="1">
+        </div>
+        <div class="button-85" style="width: 40%;">
+            <label for="videoquality">Video Quality:</label>
+            <select id="videoquality">
+                <option value="144p">144p</option>
+                <option value="240p">240p</option>
+                <option value="360p">360p</option>
+                <option value="480p">480p(SD)</option>
+                <option value="720p">720p(HD)</option>
+                <option value="960p">960p(HD)</option>
+                <option value="1080p">1080p(FULL HD)</option>
+            </select>
+        </div>
+    </div>
+    <div style="padding-left: 40%;">
+        <button id="create-video" class="btn">Create Video</button>
+    </div>
+    <br><br>
+    <video style="height:100%;width:100%;padding:5%;" id="video-player" controls>
+        <source src="" type="video/mp4">
+    </video>
+    <script>
+        const backgroundMusicSelect = document.getElementById('backgroundMusic');
+        backgroundMusicSelect.addEventListener('change', handleBackgroundMusicChange);
+
+        retrieveAudioTracks();
+
+        function retrieveAudioTracks() {
+            fetch('/retrieve_audio_tracks')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    displayRetrievedAudioTracks(data);
+                })
+                .catch(error => {
+                    console.error('Error retrieving audio tracks:', error);
+                });
+        }
+
+        function displayRetrievedAudioTracks(audioTracks) {
+            backgroundMusicSelect.innerHTML = '';
+            audioTracks.forEach(audioTrack => {
+                const optionElement = document.createElement('option');
+                optionElement.value = audioTrack[0];
+                optionElement.text = audioTrack[1];
+                backgroundMusicSelect.appendChild(optionElement);
+            });
+        }
+
+        function handleBackgroundMusicChange(event) {
+            const selectedMusicId = event.target.value;
+            fetch(`/retrieve_audio_track/${selectedMusicId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    }
+                    throw new Error('Audio track not found');
+                })
+                .then(blobData => {
+                    playSelectedAudio(blobData);
+                })
+                .catch(error => {
+                    console.error('Error retrieving audio track:', error);
+                });
+        }
+
+        function playSelectedAudio(audioBlob) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.src = URL.createObjectURL(audioBlob);
+            audioPlayer.load();
+            audioPlayer.play();
+        }
+
+        $(document).ready(function () {
+            $.get('/images', function (data) {
+                data.images.forEach(function (image) {
+                    $('#image-container').append('<div class="image-wrapper"><img class="selectable-image" data-image="' + image.image_data + '" src="data:image/jpeg;base64,' + image.image_data + '" alt="Image"></div>');
+                });
+            });
+
+            var selectedImages = [];
+            var selectedDurations = [];
+
+            $(document).on('click', '.selectable-image', function () {
+                var imageBase64 = $(this).attr('data-image');
+                var index = selectedImages.indexOf(imageBase64);
+                if (index === -1) {
+                    selectedImages.push(imageBase64);
+                    $(this).addClass('selected');
+                    $(this).parent().addClass('selected');
+                    $(this).parent().append('<span class="tick" style="font-size:35px;">&#x2714;</span>'); 
+                } else {
+                    selectedImages.splice(index, 1);
+                    $(this).removeClass('selected');
+                    $(this).parent().removeClass('selected');
+                    $(this).parent().find('.tick').remove(); 
+                }
+            });
+
+            var setTimesAppended = false;
+
+            $('#show-selected').click(function () {
+                var selectedImagesContainer = $('#selected-images-container');
+                selectedImagesContainer.empty();
+
+                selectedImages.forEach(function (image) {
+          selectedImagesContainer.append('<div class="selected-image-wrapper"><img src="data:image/jpeg;base64,' + image + '" alt="Selected Image"><br><input type="number" class="image-duration" value="3" min="1" step="1"> seconds</div>');
+        });
+
+                if (!setTimesAppended) {
+                    $('#selected-images-container').after('<br><br><div style="padding-left:41%"><button id="set-times" class="btn">Set Times</button></div><br><br>');
+                    setTimesAppended = true;
+                }
+            });
+
+            $(document).on('click', '#set-times', function () {
+                var durations = $('.image-duration').map(function () {
+                    return parseInt($(this).val());
+                }).get();
+                selectedDurations = durations;
+                console.log(selectedDurations);
+            });
+
+            $('#create-video').click(function () {
+                var customizationParams = {
+                    images: selectedImages,
+                    durations: selectedDurations,
+                    backgroundMusicId: $('#backgroundMusic').val(),
+                    transitionEffect: $('#transitionEffect').val(),
+                    transitionDuration: $('#transitionDuration').val(),
+                    videoquality: $('#videoquality').val()
+                };
+
+                $.ajax({
+                    url: '/create_video',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(customizationParams),
+                    success: function (response) {
+                        console.log('Video URL received:', response);
+                        displayVideo(response);
+                    },
+                    error: function (error) {
+                        console.error('Error creating video:', error);
+                    }
+                });
+            });
+
+            function displayVideo(videoURL) {
+                const videoElement = document.getElementById('video-player');
+                videoElement.src = videoURL;
+                videoElement.controls = true;
+                videoElement.load();
+            }
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>

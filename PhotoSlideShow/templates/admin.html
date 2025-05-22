@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+</head>
+<style>
+    
+    table {
+        margin-left: 15%;
+        width: 70%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    tr{
+        background-color: #f2f2f2;
+    }
+
+</style>
+<body class="adminbody">
+    <h1 style="color: white;text-align: center;padding-top: 10%;">User Data</h1>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Password</th>
+        </tr>
+        {% for user_row in users %}
+        <tr>
+            <td>{{ user_row[0] }}</td>
+            <td>{{ user_row[1] }}</td>
+            <td>{{ user_row[2] }}</td>
+            <td>{{ user_row[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
